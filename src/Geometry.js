@@ -1,53 +1,40 @@
-const ROOT3 = Math.sqrt(3)
-const HEXWIDTH = ROOT3
+const HEXWIDTH = Math.sqrt(3)
 
-class CanvasPoint {
-  constructor(x, y) {
-    this.x = x
-    this.y = y
-  }
+const CanvasPoint = (x, y) => Object.freeze({
+  x, y,
 
-  toString() {
-    return this.x + ', ' + this.y
-  }
-}
+  toString: () => x + ', ' + y,
+})
 
-class AxialPoint {
-  constructor(q, r) {
-    this.q = q
-    this.r = r
-  }
+const AxialPoint = (q, r) => Object.freeze({
+  q, r,
 
-  toCanvasPoint() {
-    return new CanvasPoint(ROOT3*this.q + ROOT3/2*this.r, 3/2*this.r)
-  }
+  toCanvasPoint: () => CanvasPoint(
+    HEXWIDTH*q + HEXWIDTH/2*r, 3/2*r
+  ),
 
-  sum({q, r}) {
-    return new AxialPoint(this.q + q, this.r + r)
-  }
+  sum: (point) => AxialPoint(q + point.q, r + point.r),
 
-  toString() {
-    return this.q + ', ' + this.r
-  }
-}
+  toString: () => q + ', ' + r,
+})
 
 const HEXOFFSETS = [0, 1, 2, 3, 4, 5].map(i => {
   const x = Math.sin(i * Math.PI/3)
   const y = Math.cos(i * Math.PI/3)
-  return new CanvasPoint(x, y)
+  return CanvasPoint(x, y)
 })
 
-const DIRECTIONS = [
-  new AxialPoint(0, 1),
-  new AxialPoint(1, 0),
-  new AxialPoint(0, -1),
-  new AxialPoint(-1, 0),
-  new AxialPoint(1, -1),
-  new AxialPoint(-1, 1),
-]
-
 function hexVertices(cpoint, rad) {
-  return HEXOFFSETS.map((offset) => new CanvasPoint(cpoint.x + rad*offset.x, cpoint.y + rad*offset.y))
+  return HEXOFFSETS.map((offset) => CanvasPoint(cpoint.x + rad*offset.x, cpoint.y + rad*offset.y))
 }
 
-export { AxialPoint, hexVertices, DIRECTIONS }
+const DIRECTIONS = [
+  AxialPoint(0, 1),
+  AxialPoint(1, 0),
+  AxialPoint(0, -1),
+  AxialPoint(-1, 0),
+  AxialPoint(1, -1),
+  AxialPoint(-1, 1),
+]
+
+export { AxialPoint, hexVertices, DIRECTIONS, HEXWIDTH }

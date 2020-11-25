@@ -1,11 +1,8 @@
-import React, {useState} from 'react'
+import React from 'react'
 
-import {AxialPoint, hexVertices} from './Geometry'
+import {AxialPoint, hexVertices, HEXWIDTH} from './Geometry'
 import {Unit} from './Units'
 import './App.css'
-
-const ROOT3 = Math.sqrt(3)
-const HEXWIDTH = ROOT3
 
 function regHexPoints(rad) {
   // Generates a list of axial co-ordinates describing a regular
@@ -19,7 +16,7 @@ function regHexPoints(rad) {
   for (let r = min; r <= max; r += 1) {
     for (let q = min; q <= max; q += 1) {
       if (Math.abs(q + r) <= max) {
-        result[i] = new AxialPoint(q, r)
+        result[i] = AxialPoint(q, r)
         i++
       }
     }
@@ -58,7 +55,7 @@ function Map({size, ...otherprops}) {
 }
 
 function Tile({q, r, ...otherprops}) {
-  const cpoint = new AxialPoint(q, r).toCanvasPoint()
+  const cpoint = AxialPoint(q, r).toCanvasPoint()
   return (
     <>
     <polygon

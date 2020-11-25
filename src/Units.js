@@ -8,12 +8,12 @@ function oneAway(point) {
 function moveFactory(setPoint, setSelected) {
   return ({q, r}) => {
     setSelected(false)
-    setPoint(new AxialPoint(q, r))
+    setPoint(AxialPoint(q, r))
   }
 }
 
 function MovementTile({q, r, onClick, ...otherprops}) {
-  const cpoint = new AxialPoint(q, r).toCanvasPoint()
+  const cpoint = AxialPoint(q, r).toCanvasPoint()
   return <polygon onClick={onClick}
     fill="red" stroke="red" strokeWidth="0.15" opacity="0.2"
     points={hexVertices(cpoint, 1).join(',')}
@@ -21,14 +21,14 @@ function MovementTile({q, r, onClick, ...otherprops}) {
 }
 
 function MovementGrid({q, r, move, ...otherprops}) {
-  const movePoints = oneAway(new AxialPoint(q, r))
+  const movePoints = oneAway(AxialPoint(q, r))
   return movePoints.map((point) =>
     <MovementTile {...point} onClick={() => move(point)}  {...otherprops} key={point}/>
   )
 }
 
 function Unit({q, r, ...otherprops}) {
-  const [point, setPoint] = useState(new AxialPoint(q, r))
+  const [point, setPoint] = useState(AxialPoint(q, r))
   const [selected, setSelected] = useState(false)
 
   const move = (newPoint) => {
