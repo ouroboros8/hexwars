@@ -7,9 +7,9 @@ import './App.css'
 const ROOT3 = Math.sqrt(3)
 const HEXWIDTH = ROOT3
 
-function regHexCoords(rad) {
-  // Generates a list of axial co-ordinates describing a regular hexagon with
-  // the origin at its centre
+function regHexPoints(rad) {
+  // Generates a list of axial co-ordinates describing a regular
+  // hexagon with the origin at its centre
   const min = 1 - rad
   const max = rad - 1
   const area = 3*Math.pow(rad, 2) - 3*rad + 1
@@ -43,7 +43,7 @@ function Game({size, ...otherprops}) {
     <div className='Game'>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={boxSize.join(' ')}>
         <Map size={size}/>
-        <Unit r='0' q='0'/>
+        <Unit r={0} q={0}/>
       </svg>
     </div>
   )
@@ -51,7 +51,7 @@ function Game({size, ...otherprops}) {
 
 function Map({size, ...otherprops}) {
   'A hexagonal grid in the shape of a regular multihex'
-  const tiles = regHexCoords(size).map((point) => <Tile {...point} key={point}/>)
+  const tiles = regHexPoints(size).map((point) => <Tile {...point} key={point}/>)
   return <>
     {tiles}
   </>
