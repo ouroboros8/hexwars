@@ -1,8 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import {AxialPoint, hexVertices, HEXWIDTH} from './Geometry'
 import {Unit} from './Units'
 import './App.css'
+
+const ViewContext = React.createContext([])
+
+function App() {
+  const [view, setView] = useState('menu')
+  const views = {
+    'menu': <Menu setView={setView}/>,
+    'game': <Game size={10}/>,
+  }
+  return (
+    <div className="App">
+      <ViewContext.Provider value={[view, setView]}>
+        {views[view]}
+      </ViewContext.Provider>
+    </div>
+  )
+}
+
+function Menu({setView, ...otherprops}) {
+  return <ul>
+    <li onClick={() => setView('game')}>New game</li>
+  </ul>
+}
 
 function regHexPoints(rad) {
   // Generates a list of axial co-ordinates describing a regular
@@ -16,20 +39,12 @@ function regHexPoints(rad) {
   for (let r = min; r <= max; r += 1) {
     for (let q = min; q <= max; q += 1) {
       if (Math.abs(q + r) <= max) {
-        result[i] = AxialPoint(q, r)
+        result[i] = new AxialPoint(q, r)
         i++
       }
     }
   }
   return result
-}
-
-function App() {
-  return (
-    <div className="App">
-      <Game size={10}/>
-    </div>
-  )
 }
 
 function Game({size, ...otherprops}) {
@@ -55,7 +70,7 @@ function Map({size, ...otherprops}) {
 }
 
 function Tile({q, r, ...otherprops}) {
-  const cpoint = AxialPoint(q, r).toCanvasPoint()
+  const cpoint = new AxialPoint(q, r).toCanvasPoint()
   return (
     <>
     <polygon
