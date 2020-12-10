@@ -55,7 +55,7 @@ function Game({size, ...otherprops}) {
     <div className='Game'>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={boxSize.join(' ')}>
         <Map size={size}/>
-        <Unit r={0} q={0}/>
+        <Unit point={new AxialPoint(0, 0)}/>
       </svg>
     </div>
   )
