@@ -27,8 +27,8 @@ class AxialPoint {
     return new CanvasPoint(HEXWIDTH*this.q + HEXWIDTH/2*this.r, 3/2*this.r)
   }
 
-  add(point: AxialPoint): AxialPoint {
-    return new AxialPoint(this.q + point.q, this.r + point.r)
+  add(p: AxialPoint): AxialPoint {
+    return new AxialPoint(this.q + p.q, this.r + p.r)
   }
 
   toString(): string {

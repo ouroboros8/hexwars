@@ -2,8 +2,8 @@ import {useState} from 'react'
 import {AxialPoint, DIRECTIONS, hexVertices} from './Geometry'
 import {AxialPosition} from './PropTypes'
 
-function oneAway(point: AxialPoint): AxialPoint[] {
-  return DIRECTIONS.map((direction) => point.add(direction))
+function oneAway(p: AxialPoint): AxialPoint[] {
+  return DIRECTIONS.map((direction) => p.add(direction))
 }
 
 type MoverProps = {

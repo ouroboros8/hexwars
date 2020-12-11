@@ -69,7 +69,7 @@ function Map({size}: GameProps) {
   }
 
   const tiles = regHexPoints(size).map(
-    (point) => <Tile p={point} key={point.toString()}/>
+    (p) => <Tile p={p} key={p.toString()}/>
   )
   return <>
     {tiles}
