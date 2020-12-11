@@ -1,17 +1,19 @@
 import {useState} from 'react'
 import {AxialPoint, DIRECTIONS, hexVertices} from './Geometry'
-
-type UnitProps = {
-  point: AxialPoint
-  move: (p: AxialPoint) => void
-}
+import {AxialPosition} from './PropTypes'
 
 function oneAway(point: AxialPoint): AxialPoint[] {
   return DIRECTIONS.map((direction) => point.add(direction))
 }
 
-function MovementGrid({point, move}: UnitProps): JSX.Element {
-  const movePoints = oneAway(point)
+type MoverProps = {
+  move: (p: AxialPoint) => void
+}
+
+type MoveGridProps = AxialPosition & MoverProps
+
+function MoveGrid({p, move}: MoveGridProps): JSX.Element {
+  const movePoints = oneAway(p)
   return <>{
     movePoints.map((p) => <polygon
       points={hexVertices(p.toCanvasPoint(), 1).join(',')}
@@ -22,8 +24,8 @@ function MovementGrid({point, move}: UnitProps): JSX.Element {
   }</>
 }
 
-function Unit({point}: UnitProps) {
-  const [position, setPosition] = useState(point)
+function Unit({p}: AxialPosition): JSX.Element {
+  const [position, setPosition] = useState(p)
   const [selected, setSelected] = useState(false)
 
   const move = (p: AxialPoint) => {
@@ -37,7 +39,7 @@ function Unit({point}: UnitProps) {
       cx={cpoint.x} cy={cpoint.y} r="0.5"
       fill="red" stroke="black" strokeWidth="0.1"
     />
-    {selected && <MovementGrid point={position} move={move}/>}
+    {selected && <MoveGrid p={position} move={move}/>}
   </>
 }
 

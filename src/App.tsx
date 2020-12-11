@@ -1,33 +1,46 @@
 import React, {useState} from 'react'
 
 import {AxialPoint, hexVertices, HEXWIDTH} from './Geometry'
+import {AxialPosition} from './PropTypes'
 import {Unit} from './Units'
 import './App.css'
 
-const ViewContext = React.createContext([])
+enum View {
+  Menu,
+  Game,
+}
 
-function App() {
-  const [view, setView] = useState('menu')
+type ViewSetter = (view: View) => void
+
+const ViewSetterContext = React.createContext<ViewSetter>(
+  (view: View) => console.warn("No view provider")
+)
+
+const useView = () => React.useContext(ViewSetterContext)
+
+function App(): JSX.Element {
+  const [view, setView] = useState(View.Menu)
   const views = {
-    'menu': <Menu setView={setView}/>,
-    'game': <Game size={10}/>,
+    [View.Menu]: <Menu/>,
+    [View.Game]: <Game size={10}/>,
   }
   return (
     <div className="App">
-      <ViewContext.Provider value={[view, setView]}>
+      <ViewSetterContext.Provider value={setView}>
         {views[view]}
-      </ViewContext.Provider>
+      </ViewSetterContext.Provider>
     </div>
   )
 }
 
-function Menu({setView, ...otherprops}) {
+function Menu(): JSX.Element {
+  const setView = useView()
   return <ul>
-    <li onClick={() => setView('game')}>New game</li>
+    <li onClick={() => setView(View.Game)}>New game</li>
   </ul>
 }
 
-function regHexPoints(rad) {
+function regHexPoints(rad: number): AxialPoint[] {
   // Generates a list of axial co-ordinates describing a regular
   // hexagon with the origin at its centre
   const min = 1 - rad
@@ -47,7 +60,11 @@ function regHexPoints(rad) {
   return result
 }
 
-function Game({size, ...otherprops}) {
+type GameProps = {
+  size: number
+}
+
+function Game({size}: GameProps): JSX.Element {
   const viewWidth = 2*HEXWIDTH*size
   const viewHeight = 3*size + 1
   const boxSize = [-viewWidth/2, -viewHeight/2, viewWidth, viewHeight]
@@ -55,29 +72,29 @@ function Game({size, ...otherprops}) {
     <div className='Game'>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={boxSize.join(' ')}>
         <Map size={size}/>
-        <Unit point={new AxialPoint(0, 0)}/>
+        <Unit p={new AxialPoint(0, 0)}/>
       </svg>
     </div>
   )
 }
 
-function Map({size, ...otherprops}) {
+function Map({size}: GameProps) {
   'A hexagonal grid in the shape of a regular multihex'
-  const tiles = regHexPoints(size).map((point) => <Tile {...point} key={point}/>)
+  const tiles = regHexPoints(size).map((point) => <Tile p={point} key={point.toString()}/>)
   return <>
     {tiles}
   </>
 }
 
-function Tile({q, r, ...otherprops}) {
-  const cpoint = new AxialPoint(q, r).toCanvasPoint()
+function Tile({p}: AxialPosition) {
+  const cpoint = p.toCanvasPoint()
   return (
     <>
     <polygon
       fill="none" stroke="black" strokeWidth="0.1"
       points={hexVertices(cpoint, 1).join(',')}
     />
-    <text {...cpoint} textAnchor="middle" fontSize="0.5">{[q, r].join(', ')}</text>
+    <text {...cpoint} textAnchor="middle" fontSize="0.5">{p.toString()}</text>
     </>
   )
 }
