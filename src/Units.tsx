@@ -12,7 +12,7 @@ type MoverProps = {
 
 type MoveGridProps = AxialPosition & MoverProps
 
-function MoveGrid({p, move}: MoveGridProps): JSX.Element {
+function MoveGrid({p, move}: MoveGridProps) {
   const movePoints = oneAway(p)
   return <>{
     movePoints.map((p) => <polygon
@@ -24,7 +24,7 @@ function MoveGrid({p, move}: MoveGridProps): JSX.Element {
   }</>
 }
 
-function Unit({p}: AxialPosition): JSX.Element {
+function Unit({p}: AxialPosition) {
   const [position, setPosition] = useState(p)
   const [selected, setSelected] = useState(false)
 

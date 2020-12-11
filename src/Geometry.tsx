@@ -36,14 +36,14 @@ class AxialPoint {
   }
 }
 
-function hexVertices(cpoint: CanvasPoint, rad: number): CanvasPoint[] {
+function hexVertices(c: CanvasPoint, rad: number): CanvasPoint[] {
   const hexOffsets: CanvasPoint[] = [0, 1, 2, 3, 4, 5].map(i => {
     const x = Math.sin(i * Math.PI/3)
     const y = Math.cos(i * Math.PI/3)
     return new CanvasPoint(x, y)
   })
   return hexOffsets.map(
-    (offset) => new CanvasPoint(cpoint.x + rad*offset.x, cpoint.y + rad*offset.y)
+    (offset) => new CanvasPoint(c.x + rad*offset.x, c.y + rad*offset.y)
   )
 }
 
