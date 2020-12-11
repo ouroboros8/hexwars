@@ -1,9 +1,17 @@
 import {useState} from 'react'
-import {AxialPoint, DIRECTIONS, hexVertices} from './Geometry'
+import {AxialPoint, CubePoint, hexVertices} from './Geometry'
 import {AxialPosition} from './PropTypes'
 
-function oneAway(p: AxialPoint): AxialPoint[] {
-  return DIRECTIONS.map((direction) => p.add(direction))
+function range(c: AxialPoint, n: number): AxialPoint[] {
+  let results: AxialPoint[] = []
+  for (let x = -n; x <= n; x++) {
+    for (let y = Math.max(-n, -x-n); y <= Math.min(n, -x+n); y++) {
+      const z = -x-y
+      const d = new CubePoint(x, y, z).toAxialPoint()
+      results.push(c.add(d))
+    }
+  }
+  return results
 }
 
 type MoverProps = {
@@ -13,7 +21,7 @@ type MoverProps = {
 type MoveGridProps = AxialPosition & MoverProps
 
 function MoveGrid({p, move}: MoveGridProps) {
-  const movePoints = oneAway(p)
+  const movePoints = range(p, 2)
   return <>{
     movePoints.map((p) => <polygon
       points={hexVertices(p.toCanvasPoint(), 1).join(',')}
