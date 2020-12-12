@@ -3,29 +3,26 @@ import React from 'react'
 import {AxialPosition} from './PropTypes'
 import {AxialPoint, hexVertices} from './Geometry'
 
-type TileData = {
+type TileInfo = {
   colour: string
 } & AxialPosition
 
-export type TileMap = {
-  [index: string]: TileData
+export type MapStorage = {
+  [index: string]: TileInfo
 }
 
-export type MapData = {
-  // String co-ordinate indexed map of Tiles
-  tiles: TileMap // TODO extend with more tile data (terrain types etc.)
-  // Size of the map, used to calculate ViewBox size
-  size: number
+export type MapProps = {
+  data: MapStorage,
 }
 
-function Map({tiles}: MapData) {
-  const children = Object.values(tiles).map(
+function Map({data}: MapProps) {
+  const children = Object.values(data).map(
     (props) => <Tile {...props} key={props.p.toString()}/>
   )
   return <>{children}</>
 }
 
-function Tile({p, colour}: TileData) {
+function Tile({p, colour}: TileInfo) {
   const cpoint = p.toCanvasPoint()
   return (
     <>
@@ -43,7 +40,7 @@ function regHexMap(n: number) {
   const min = 1 - n
   const max = n - 1
 
-  const tiles: TileMap = {}
+  const tiles: MapStorage = {}
   for (let r = min; r <= max; r += 1) {
     for (let q = min; q <= max; q += 1) {
       if (Math.abs(q + r) <= max) {
@@ -57,14 +54,11 @@ function regHexMap(n: number) {
       }
     }
   }
-  return {
-    tiles: tiles,
-    size: n,
-  }
+  return tiles
 }
 
 interface MapCollection {
-  [name: string]: MapData
+  [name: string]: MapStorage
 }
 
 const DefaultMaps: MapCollection = {

@@ -1,30 +1,42 @@
 import {useState} from 'react'
 import {hexVertices} from './Geometry'
 import {AxialPosition} from './PropTypes'
+import {MapStorage} from './Map'
 
-type UnitType = {
+type UnitStats = {
   name: string
   move: number
   colour: string
+  faction: string
 }
 
-const Units = {
+export type UnitInfo = UnitStats & AxialPosition
+
+type UnitDefs = {
+  [index: string]: UnitStats
+}
+
+export type UnitStorage = {
+  [index: string]: UnitInfo
+}
+
+const UnitTypes: UnitDefs = {
   Drone: {
     name: 'Drone',
     move: 1,
     colour: 'brown',
+    faction: 'Bee',
   },
 
   Queen: {
     name: 'Queen',
     move: 2,
     colour: 'yellow',
+    faction: 'Bee',
   },
 }
 
-type UnitData = UnitType & AxialPosition
-
-function Unit({name, move, colour, p}: UnitData) {
+function Unit({name, move, colour, p}: UnitInfo) {
   const [position, setPosition] = useState(p)
   // TODO selected needs to be pulled up into Game, so that only one unit can
   // be selected at once
@@ -54,4 +66,16 @@ function Unit({name, move, colour, p}: UnitData) {
   </>
 }
 
-export {Units, Unit}
+type PlayerUnitsInfo = {
+  units: UnitStorage
+  readonly map: MapStorage
+}
+
+function PlayerUnits({units, map}: PlayerUnitsInfo) {
+  // TODO store unit position and selectedness up here?
+  return <>
+    {Object.entries(units).map(([pos, props]) => <Unit {...props} key={pos}/>)}
+  </>
+}
+
+export {PlayerUnits, UnitTypes}
