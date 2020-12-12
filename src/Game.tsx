@@ -6,12 +6,15 @@ import {PlayerUnits, UnitTypes, UnitStorage} from './Units'
 import {HEXWIDTH} from './Geometry'
 
 function mapSize(map: MapStorage) {
-  // TODO implement
-  return 10
+  // This should return width and height at some point I expect
+  return Math.max(...Object.values(map).reduce((acc: number[], tile) => {
+    acc.push(tile.p.q)
+    acc.push(tile.p.r)
+    return acc
+  }, [])) + 1
 }
 
 function Game() {
-  //TODO: this component seems messy
   const [map, setMap] = useState<MapStorage>({})
 
   const p0 = new AxialPoint(0, 0)
