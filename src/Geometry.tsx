@@ -45,6 +45,11 @@ export class AxialPoint {
     this.r = r
   }
 
+  static fromString(s: string) {
+    const [q, r] = s.split(', ').map(parseInt)
+    return new AxialPoint(q, r)
+  }
+
   add(p: AxialPoint): AxialPoint {
     return new AxialPoint(this.q + p.q, this.r + p.r)
   }

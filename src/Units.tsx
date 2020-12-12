@@ -2,6 +2,10 @@ import {useState} from 'react'
 import {AxialPoint, CubePoint, hexVertices} from './Geometry'
 import {AxialPosition} from './PropTypes'
 
+export enum UnitType { //TODO: rename to unit and namespace?
+  Drone
+}
+
 function range(c: AxialPoint, n: number): AxialPoint[] {
   let results: AxialPoint[] = []
   for (let x = -n; x <= n; x++) {
@@ -21,7 +25,7 @@ type MoverProps = {
 type MoveGridProps = AxialPosition & MoverProps
 
 function MoveGrid({p, move}: MoveGridProps) {
-  const movePoints = range(p, 2)
+  const movePoints = range(p, 5)
   return <>{
     movePoints.map((p) => <polygon
       points={hexVertices(p.toCanvasPoint(), 1).join(',')}
@@ -32,7 +36,11 @@ function MoveGrid({p, move}: MoveGridProps) {
   }</>
 }
 
-function Unit({p}: AxialPosition) {
+type UnitProps = AxialPosition & {
+  unit: UnitType
+}
+
+export function Unit({unit, p}: UnitProps) {
   const [position, setPosition] = useState(p)
   const [selected, setSelected] = useState(false)
 
@@ -50,5 +58,3 @@ function Unit({p}: AxialPosition) {
     {selected && <MoveGrid p={position} move={move}/>}
   </>
 }
-
-export { Unit }
