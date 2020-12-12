@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 
 import {AxialPoint} from './Geometry'
 import {Map, TileMap} from './Map'
-import {Unit, UnitType} from './Units'
+import {Unit, Units} from './Units'
 import {HEXWIDTH} from './Geometry'
 
 function regHexPoints(rad: number): TileMap {
@@ -10,16 +10,18 @@ function regHexPoints(rad: number): TileMap {
   // hexagon with the origin at its centre
   const min = 1 - rad
   const max = rad - 1
-  const area = 3*Math.pow(rad, 2) - 3*rad + 1
 
   const result: TileMap = {}
-  let i = 0
   for (let r = min; r <= max; r += 1) {
     for (let q = min; q <= max; q += 1) {
       if (Math.abs(q + r) <= max) {
+        const colours = [
+          'lightblue',
+          'lightgreen',
+          'lightyellow',
+        ]
         const p = new AxialPoint(q, r)
-        result[p.toString()] = {p: p, colour: 'green'}
-        i++
+        result[p.toString()] = {p: p, colour: colours[Math.abs(q+r) % 3]}
       }
     }
   }
@@ -39,7 +41,8 @@ function Game() {
     <div className='Game'>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox={boxSize.join(' ')}>
         <Map {...map}/>
-        <Unit p={new AxialPoint(0, 0)} unit={UnitType.Drone}/>
+        <Unit p={new AxialPoint(0, 0)} {...Units.Drone}/>
+        <Unit p={new AxialPoint(1, 0)} {...Units.Queen}/>
       </svg>
     </div>
   )
