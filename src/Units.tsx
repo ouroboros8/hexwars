@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {AxialPoint, CubePoint, hexVertices} from './Geometry'
+import {hexVertices} from './Geometry'
 import {AxialPosition} from './PropTypes'
 
 type UnitType = {
@@ -22,27 +22,15 @@ const Units = {
   },
 }
 
-function range(c: AxialPoint, n: number): AxialPoint[] {
-  let results: AxialPoint[] = []
-  for (let x = -n; x <= n; x++) {
-    for (let y = Math.max(-n, -x-n); y <= Math.min(n, -x+n); y++) {
-      const z = -x-y
-      const d = new CubePoint(x, y, z).toAxialPoint()
-      results.push(c.add(d))
-    }
-  }
-  return results
-}
+type UnitData = UnitType & AxialPosition
 
-type UnitProps = UnitType & AxialPosition
-
-function Unit({name, move, colour, p}: UnitProps) {
+function Unit({name, move, colour, p}: UnitData) {
   const [position, setPosition] = useState(p)
   // TODO selected needs to be pulled up into Game, so that only one unit can
   // be selected at once
   const [selected, setSelected] = useState(false)
 
-  const moveGrid = range(position, move).map((p) => {
+  const moveGrid = position.range(move).map((p) => {
 
       const finishMove = () => {
         setPosition(p)

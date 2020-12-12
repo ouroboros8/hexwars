@@ -1,6 +1,6 @@
-export const HEXWIDTH = Math.sqrt(3)
+const HEXWIDTH = Math.sqrt(3)
 
-export class CanvasPoint {
+class CanvasPoint {
   x: number
   y: number
 
@@ -14,7 +14,7 @@ export class CanvasPoint {
   }
 }
 
-export class CubePoint {
+class CubePoint {
   x: number
   y: number
   z: number
@@ -36,7 +36,7 @@ export class CubePoint {
   }
 }
 
-export class AxialPoint {
+class AxialPoint {
   q: number
   r: number
 
@@ -54,6 +54,19 @@ export class AxialPoint {
     return new AxialPoint(this.q + p.q, this.r + p.r)
   }
 
+  range(n: number): AxialPoint[] {
+    let results: AxialPoint[] = []
+    for (let x = -n; x <= n; x++) {
+      for (let y = Math.max(-n, -x-n); y <= Math.min(n, -x+n); y++) {
+        const z = -x-y
+        const d = new CubePoint(x, y, z).toAxialPoint()
+        results.push(this.add(d))
+      }
+    }
+    return results
+}
+
+
   toCubePoint(): CubePoint {
     let x = this.q
     let z = this.r
@@ -69,7 +82,7 @@ export class AxialPoint {
   }
 }
 
-export function hexVertices(c: CanvasPoint, rad: number): CanvasPoint[] {
+function hexVertices(c: CanvasPoint, rad: number): CanvasPoint[] {
   const hexOffsets: CanvasPoint[] = [0, 1, 2, 3, 4, 5].map(i => {
     const x = Math.sin(i * Math.PI/3)
     const y = Math.cos(i * Math.PI/3)
@@ -80,11 +93,4 @@ export function hexVertices(c: CanvasPoint, rad: number): CanvasPoint[] {
   )
 }
 
-export const DIRECTIONS = [
-  new AxialPoint(0, 1),
-  new AxialPoint(1, 0),
-  new AxialPoint(0, -1),
-  new AxialPoint(-1, 0),
-  new AxialPoint(1, -1),
-  new AxialPoint(-1, 1),
-]
+export { AxialPoint, CanvasPoint, CubePoint, HEXWIDTH, hexVertices }

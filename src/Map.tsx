@@ -1,11 +1,11 @@
-import React, {useState} from 'react'
+import React from 'react'
 
 import {AxialPosition} from './PropTypes'
-import {hexVertices} from './Geometry'
+import {AxialPoint, hexVertices} from './Geometry'
 
-type TileData = AxialPosition & {
+type TileData = {
   colour: string
-}
+} & AxialPosition
 
 export type TileMap = {
   [index: string]: TileData
@@ -18,7 +18,7 @@ export type MapData = {
   size: number
 }
 
-export function Map({tiles}: MapData) {
+function Map({tiles}: MapData) {
   const children = Object.values(tiles).map(
     (props) => <Tile {...props} key={props.p.toString()}/>
   )
@@ -37,3 +37,40 @@ function Tile({p, colour}: TileData) {
     </>
   )
 }
+
+function regHexMap(n: number) {
+  // Creates a regular multihex map of size n
+  const min = 1 - n
+  const max = n - 1
+
+  const tiles: TileMap = {}
+  for (let r = min; r <= max; r += 1) {
+    for (let q = min; q <= max; q += 1) {
+      if (Math.abs(q + r) <= max) {
+        const colours = [
+          'lightblue',
+          'lightgreen',
+          'lightyellow',
+        ]
+        const p = new AxialPoint(q, r)
+        tiles[p.toString()] = {p: p, colour: colours[Math.abs(q+r) % colours.length]}
+      }
+    }
+  }
+  return {
+    tiles: tiles,
+    size: n,
+  }
+}
+
+interface MapCollection {
+  [name: string]: MapData
+}
+
+const DefaultMaps: MapCollection = {
+  Small: regHexMap(6),
+  Medium: regHexMap(10),
+  Large: regHexMap(14),
+}
+
+export {Map, DefaultMaps}
