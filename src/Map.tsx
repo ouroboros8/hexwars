@@ -12,7 +12,10 @@ export type TileMap = {
 }
 
 export type MapData = {
+  // String co-ordinate indexed map of Tiles
   tiles: TileMap // TODO extend with more tile data (terrain types etc.)
+  // Size of the map, used to calculate ViewBox size
+  size: number
 }
 
 export function Map({tiles}: MapData) {

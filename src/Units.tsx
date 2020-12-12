@@ -8,7 +8,7 @@ type UnitType = {
   colour: string
 }
 
-export const Units = {
+const Units = {
   Drone: {
     name: 'Drone',
     move: 1,
@@ -36,7 +36,7 @@ function range(c: AxialPoint, n: number): AxialPoint[] {
 
 type UnitProps = UnitType & AxialPosition
 
-export function Unit({name, move, colour, p}: UnitProps) {
+function Unit({name, move, colour, p}: UnitProps) {
   const [position, setPosition] = useState(p)
   // TODO selected needs to be pulled up into Game, so that only one unit can
   // be selected at once
@@ -65,3 +65,5 @@ export function Unit({name, move, colour, p}: UnitProps) {
     {selected && moveGrid}
   </>
 }
+
+export {Units, Unit}

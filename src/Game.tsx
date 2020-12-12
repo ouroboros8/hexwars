@@ -21,7 +21,7 @@ function regHexPoints(rad: number): TileMap {
           'lightyellow',
         ]
         const p = new AxialPoint(q, r)
-        result[p.toString()] = {p: p, colour: colours[Math.abs(q+r) % 3]}
+        result[p.toString()] = {p: p, colour: colours[Math.abs(q+r) % colours.length]}
       }
     }
   }
@@ -30,12 +30,14 @@ function regHexPoints(rad: number): TileMap {
 
 function Game() {
   const mapData = {
-    tiles: regHexPoints(10)
+    tiles: regHexPoints(6),
+    size: 6,
   }
+  console.log(Object.keys(mapData.tiles).length)
   const [map, setMap] = useState(mapData)
 
-  const viewWidth = 2*HEXWIDTH*10
-  const viewHeight = 3*10 + 1
+  const viewWidth = 2*HEXWIDTH*mapData.size
+  const viewHeight = 3*mapData.size + 1
   const boxSize = [-viewWidth/2, -viewHeight/2, viewWidth, viewHeight]
   return (
     <div className='Game'>
